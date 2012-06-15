@@ -30,7 +30,7 @@
     <parent>
         <groupId>org.richfaces.sandbox.ui.radio</groupId>
         <artifactId>radio-parent</artifactId>
-        <version>4.3.0-SNAPSHOT</version>
+        <version>4.2.2.Final.ITC1</version>
     </parent>
 
     <artifactId>radio-ui</artifactId>
@@ -40,19 +40,19 @@
         <dependency>
             <groupId>org.richfaces.ui.core</groupId>
             <artifactId>richfaces-ui-core-ui</artifactId>
-            <version>${project.version}</version>
+            <version>${version.richfaces}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.richfaces.ui</groupId>
             <artifactId>richfaces-components-ui</artifactId>
-            <version>${project.version}</version>
+            <version>${version.richfaces}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.richfaces.cdk</groupId>
             <artifactId>annotations</artifactId>
-            <version>${project.version}</version>
+            <version>${version.richfaces}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -84,7 +84,6 @@
             <plugin>
                 <groupId>org.richfaces.cdk</groupId>
                 <artifactId>maven-cdk-plugin</artifactId>
-                <version>${project.version}</version>
                 <executions>
                     <execution>
                         <id>cdk-generate-sources</id>
