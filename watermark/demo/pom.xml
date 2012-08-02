@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.richfaces.sandbox.ui.watermark</groupId>
         <artifactId>watermark-parent</artifactId>
-        <version>4.3.0-SNAPSHOT</version>
+        <version>4.2.2.Final.ITC1</version>
     </parent>
 
     <artifactId>watermark-demo</artifactId>
@@ -38,12 +38,12 @@
         <dependency>
             <groupId>org.richfaces.ui</groupId>
             <artifactId>richfaces-components-ui</artifactId>
-            <version>${project.version}</version>
+            <version>${version.richfaces}</version>
         </dependency>
         <dependency>
             <groupId>org.richfaces.core</groupId>
             <artifactId>richfaces-core-impl</artifactId>
-            <version>${project.version}</version>
+            <version>${version.richfaces}</version>
         </dependency>
         <dependency>
             <groupId>org.richfaces.sandbox.ui.watermark</groupId>
