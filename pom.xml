@@ -43,6 +43,7 @@
         <module>carousel</module>
         <module>colorpicker</module>
         <module>component-template</module>
+        <module>contextmenu</module>
         <module>dashboard</module>
         <module>dynamic-panels</module>
         <module>focus</module>
