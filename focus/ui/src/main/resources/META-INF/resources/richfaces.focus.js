@@ -6,7 +6,8 @@
  * but it swallows exception thrown during evaluation, which makes debugging
  * hard.
  */
-(function ($, rf) {
+(function ($, rf)
+{
     // Create (for example) ui container for our component class
     rf.ui = rf.ui || {};
     // Default options definition if needed for the component
@@ -20,7 +21,8 @@
     var TIMING_ON_JS_CALL = "onJScall";
     var TIMING_ON_LOAD = "onload";
 
-    var focus = function(element) {
+    var focus = function (element)
+    {
         try {
             if (element == null) {
                 if (m_focus == null) {
@@ -30,7 +32,7 @@
             }
             if (element != null) {
                 if (typeof element === "string") {
-                    element = document.getElementById("j_idt30:dateInputDate");
+                    element = document.getElementById(element);
                 }
                 element.focus();
                 element.select(element);
@@ -43,19 +45,22 @@
     // $super - reference to the parent prototype, will be available inside those methods
     rf.ui.Focus = {
         // class name
-        name:"Focus",
+        name: "Focus",
         // private functions definition
-        focus:  focus,
-        focusStored: function(focusComponentId) {
+        focus: focus,
+        focusStored: function (focusComponentId)
+        {
             var element = document.getElementById(m_focusStore[focusComponentId]);
             if (element != null) {
                 focus(element);
             }
         },
-        getFocus : function() {
+        getFocus: function ()
+        {
             return m_focus;
         },
-        setFocus : function(id, priority, focusComponentId, timing) {
+        setFocus: function (id, priority, focusComponentId, timing)
+        {
             if (priority == null) {
                 priority = 99999;
             }
@@ -74,14 +79,16 @@
                 }
             }
         },
-        clearFocus : function() {
+        clearFocus: function ()
+        {
             m_focus = null;
             m_priority = 999999;
             m_timing = null;
         }
 
     };
-    jQuery(function() {
+    jQuery(function ()
+    {
         if (m_timing == TIMING_ON_LOAD) {
             focus(null);
         }
