@@ -35,7 +35,9 @@
                     element = document.getElementById(element);
                 }
                 element.focus();
-                element.select(element);
+                if (typeof(element.select) == "function") {
+                    element.select(element);
+                }
             }
         } finally {
             rf.ui.Focus.clearFocus();
