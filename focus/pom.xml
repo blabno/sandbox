@@ -32,13 +32,9 @@
 
     <groupId>org.richfaces.sandbox.ui.focus</groupId>
     <artifactId>focus-parent</artifactId>
-    <version>4.2.2.Final.ITC1</version>
+    <version>4.2.2.Final.ITC2</version>
     <packaging>pom</packaging>
     <name>Richfaces UI Components: focus parent</name>
-
-    <properties>
-        <richfaces.version>4.2.2.Final</richfaces.version>
-    </properties>
 
     <modules>
         <module>ui</module>
