@@ -82,17 +82,13 @@ public class HtmlFocusRenderer extends RendererBase {
         Integer priority = uiFocus.getPriority();
         String targetClientId = uiFocus.getTargetClientId();
         if (targetClientId == null || "".equals(targetClientId)) {
-            String targetComponentId = uiFocus.getTargetComponentId(context);
-            String suffix = uiFocus.getSuffix();
-            if (targetComponentId == null || "".equals(targetComponentId)) {
+            AbstractFocus.FocusInfo targetFocusInfo = uiFocus.findTargetComponentFocusInfo(context);
+            if (targetFocusInfo == null) {
                 return;
             }
-            UIComponent forcomp = getUtils().findComponentFor(component, targetComponentId);
-            if (forcomp == null) {
-                throw new FacesException("No component with id=" + targetComponentId + " found!");
-            }
-            targetClientId = forcomp.getClientId(context);
-            AbstractFocusModifier modifier = AbstractFocus.findModifier(forcomp);
+            String suffix = uiFocus.getSuffix();
+            targetClientId = targetFocusInfo.getClientId();
+            AbstractFocusModifier modifier = AbstractFocus.findModifier(targetFocusInfo.getInput());
             if (modifier != null) {
                 final String modifiedTargetClientId = modifier.getTargetClientId();
                 if (modifiedTargetClientId != null && !modifiedTargetClientId.equals("")) {
@@ -102,7 +98,7 @@ public class HtmlFocusRenderer extends RendererBase {
                 }
             }
             if (priority == null) {
-                priority = uiFocus.calculatePriority(forcomp);
+                priority = targetFocusInfo.getPriority();
             }
             if (suffix != null && !"".equals(suffix)) {
                 targetClientId += suffix;

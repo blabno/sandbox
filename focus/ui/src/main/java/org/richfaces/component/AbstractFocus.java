@@ -9,11 +9,16 @@ import org.richfaces.log.LogFactory;
 import org.richfaces.log.Logger;
 import org.richfaces.renderkit.html.HtmlFocusRenderer;
 
+import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
 import javax.faces.component.UIForm;
 import javax.faces.component.UIInput;
+import javax.faces.component.visit.VisitCallback;
+import javax.faces.component.visit.VisitContext;
+import javax.faces.component.visit.VisitResult;
 import javax.faces.context.FacesContext;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,7 +28,6 @@ import java.util.Set;
 @JsfComponent(tag = @Tag(name = "focus", type = TagType.Facelets),
     renderer = @JsfRenderer(family = AbstractFocus.COMPONENT_FAMILY, type = HtmlFocusRenderer.RENDERER_TYPE))
 public abstract class AbstractFocus extends UIComponentBase {
-// ------------------------------ FIELDS ------------------------------
 
     public static final String COMPONENT_FAMILY = "org.richfaces.Focus";
 
@@ -36,8 +40,6 @@ public abstract class AbstractFocus extends UIComponentBase {
     public static final String TIMING_ON_LOAD = "onload";
 
     private static final Logger LOG = LogFactory.getLogger(AbstractFocus.class);
-
-// -------------------------- STATIC METHODS --------------------------
 
     public static AbstractFocusModifier findModifier(UIComponent component) {
         if (component instanceof AbstractFocusModifier) {
@@ -55,24 +57,6 @@ public abstract class AbstractFocus extends UIComponentBase {
         return modifier;
     }
 
-// -------------------------- OTHER METHODS --------------------------
-
-    public int calculatePriority(UIComponent component) {
-        final AbstractFocusModifier modifier = findModifier(component);
-        if (modifier != null && modifier.getPriority() != null) {
-            return modifier.getPriority();
-        }
-        UIComponent parentForm = component.getParent();
-        while (parentForm != null && !(parentForm instanceof UIForm)) {
-            parentForm = parentForm.getParent();
-        }
-        if (parentForm != null) {
-            return getUIInputChildrenCount(parentForm, component.getId());
-        } else {
-            return DEFAULT_PRIORITY;
-        }
-    }
-
     @Attribute
     public abstract String getFor();
 
@@ -88,13 +72,21 @@ public abstract class AbstractFocus extends UIComponentBase {
     @Attribute
     public abstract String getTargetClientId();
 
-    public String getTargetComponentId(FacesContext context) {
+    @Attribute
+    public abstract String getTiming();
+
+    public FocusInfo findTargetComponentFocusInfo(FacesContext context) {
         String aFor = getFor();
 
         if (aFor != null && !"".equals(aFor)) {
-            return aFor;
+            final UIComponent component = findComponent(aFor);
+            if (component == null) {
+                throw new FacesException("No component with id=" + aFor + " found!");
+            }
+            return new FocusInfo(component.getClientId(context), component, calculatePriority(component));
         } else {
-            if (!(getParent() instanceof UIInput)) {
+            final UIComponent parent = getParent();
+            if (!(parent instanceof UIInput)) {
                 Set<String> allowedClientIds = new HashSet<String>();
                 Iterator<String> clientIdsWithMessages = getFacesContext().getClientIdsWithMessages();
                 while (clientIdsWithMessages.hasNext()) {
@@ -103,29 +95,42 @@ public abstract class AbstractFocus extends UIComponentBase {
                         allowedClientIds.add(clientId);
                     }
                 }
-                final List<UIInput> inputs = new ArrayList<UIInput>();
-                getInputs(getParentForm(this), allowedClientIds, inputs);
-                UIInput inputWithLowestPriority = null;
+                final List<FocusInfo> inputFocusInfos = new ArrayList<FocusInfo>();
+                getInputs(getParentForm(this), allowedClientIds, inputFocusInfos);
+                FocusInfo inputWithLowestPriority = null;
                 int lowestPriority = Integer.MAX_VALUE;
-                for (UIInput input : inputs) {
-                    final int priority = calculatePriority(input);
+                for (FocusInfo entry : inputFocusInfos) {
+                    final int priority = entry.priority;
                     if (priority < lowestPriority) {
-                        inputWithLowestPriority = input;
+                        inputWithLowestPriority = entry;
                         lowestPriority = priority;
                     }
                 }
-                return inputWithLowestPriority == null ? null : inputWithLowestPriority.getClientId(context);
+                return inputWithLowestPriority;
             } else {
-                return getParent().getClientId(context);
+                return new FocusInfo(parent.getClientId(context), parent, calculatePriority(parent));
             }
         }
     }
 
-    @Attribute
-    public abstract String getTiming();
+    private int calculatePriority(UIComponent component) {
+        final AbstractFocusModifier modifier = findModifier(component);
+        if (modifier != null && modifier.getPriority() != null) {
+            return modifier.getPriority();
+        }
+        UIComponent parentForm = component.getParent();
+        while (parentForm != null && !(parentForm instanceof UIForm)) {
+            parentForm = parentForm.getParent();
+        }
+        if (parentForm != null) {
+            return getUIInputChildrenCount(parentForm, component.getId());
+        } else {
+            return DEFAULT_PRIORITY;
+        }
+    }
 
-    private void getInputs(UIComponent parent, Set<String> allowedClientIds, List<UIInput> inputs) {
-        FacesContext facesContext = getFacesContext();
+    private void getInputs(UIComponent parent, final Set<String> allowedClientIds, final List<FocusInfo> focusInfos) {
+        final FacesContext facesContext = getFacesContext();
         if (isCompositeComponent(parent)) {
             String parentId = parent.getId();
             parent = parent.getFacet(UIComponent.COMPOSITE_FACET_NAME);
@@ -134,15 +139,21 @@ public abstract class AbstractFocus extends UIComponentBase {
                 return;
             }
         }
-        for (UIComponent child : parent.getChildren()) {
-            if (child instanceof UIInput && (allowedClientIds.size() == 0 || allowedClientIds.contains(child.getClientId(facesContext)))) {
-                final AbstractFocusModifier modifier = findModifier(child);
-                if (modifier == null || !modifier.isSkipped()) {
-                    inputs.add((UIInput) child);
+        parent.visitTree(VisitContext.createVisitContext(FacesContext.getCurrentInstance()), new VisitCallback() {
+            @Override
+            public VisitResult visit(VisitContext context, UIComponent target) {
+                if (!target.isRendered()) {
+                    return VisitResult.REJECT;
                 }
+                if (target instanceof UIInput && (allowedClientIds.size() == 0 || allowedClientIds.contains(target.getClientId(facesContext)))) {
+                    final AbstractFocusModifier modifier = findModifier(target);
+                    if (modifier == null || !modifier.isSkipped()) {
+                        focusInfos.add(new FocusInfo(target.getClientId(), target, calculatePriority(target)));
+                    }
+                }
+                return VisitResult.ACCEPT;
             }
-            getInputs(child, allowedClientIds, inputs);
-        }
+        });
     }
 
     private UIForm getParentForm(UIComponent component) {
@@ -183,11 +194,33 @@ public abstract class AbstractFocus extends UIComponentBase {
         return false;
     }
 
-// -------------------------- INNER CLASSES --------------------------
-
-    private class Holder<T> {
-// ------------------------------ FIELDS ------------------------------
+    private static class Holder<T> {
 
         public T value;
+    }
+
+    public static class FocusInfo implements Serializable {
+
+        private String clientId;
+        private UIComponent input;
+        private int priority;
+
+        private FocusInfo(String clientId, UIComponent input, int priority) {
+            this.clientId = clientId;
+            this.input = input;
+            this.priority = priority;
+        }
+
+        public String getClientId() {
+            return clientId;
+        }
+
+        public UIComponent getInput() {
+            return input;
+        }
+
+        public int getPriority() {
+            return priority;
+        }
     }
 }
