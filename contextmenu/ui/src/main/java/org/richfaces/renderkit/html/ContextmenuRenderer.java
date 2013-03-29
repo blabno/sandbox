@@ -41,8 +41,8 @@ import java.util.Map;
 
 @JsfRenderer(family = AbstractContextmenu.COMPONENT_FAMILY, type = ContextmenuRenderer.RENDERER_TYPE)
 @ResourceDependencies({@ResourceDependency(library = "javax.faces", name = "jsf.js"), @ResourceDependency(name = "jquery.js", target = "head"),
-    @ResourceDependency(name = "richfaces.js", target = "head"), @ResourceDependency(name = "richfaces-event.js", target = "head"),
-    @ResourceDependency(name = "richfaces-base-component.js", target = "head"),
+    @ResourceDependency(name = "richfaces.js", target = "head"), @ResourceDependency(name = "richfaces-base-component.js", target = "head"),
+    @ResourceDependency(name = "richfaces-event.js", target = "head"),
     @ResourceDependency(library = "org.richfaces", name = "jquery-ui-core.js", target = "head"),
     @ResourceDependency(name = "jquery.contextMenu.js", target = "head"), @ResourceDependency(name = "richfaces.contextmenu.js", target = "head"),
     @ResourceDependency(name = "contextmenu.css", target = "head")})
