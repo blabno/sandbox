@@ -1,4 +1,4 @@
-﻿/*/ <reference path="..\sample\script\jquery-1.4.4.js" />*/
+/*/ <reference path="..\sample\script\jquery-1.4.4.js" />*/
 /* jQuery KeyTips Plugin 1.0.3 - http://damianedwards.com */
 (function ($) {
     /*/ <param name="$" type="jQuery" />*/
