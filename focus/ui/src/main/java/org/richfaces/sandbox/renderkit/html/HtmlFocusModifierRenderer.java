@@ -20,18 +20,17 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.richfaces.renderkit.html;
+package org.richfaces.sandbox.renderkit.html;
 
 import org.richfaces.cdk.annotations.JsfRenderer;
-import org.richfaces.component.AbstractFocus;
-import org.richfaces.component.AbstractFocusModifier;
+import org.richfaces.sandbox.component.AbstractFocusModifier;
 import org.richfaces.renderkit.RendererBase;
 
 import javax.faces.application.ResourceDependencies;
 import javax.faces.application.ResourceDependency;
 import javax.faces.component.UIComponent;
 
-@JsfRenderer(family = AbstractFocus.COMPONENT_FAMILY, type = HtmlFocusModifierRenderer.RENDERER_TYPE)
+@JsfRenderer(family = org.richfaces.sandbox.component.AbstractFocus.COMPONENT_FAMILY, type = HtmlFocusModifierRenderer.RENDERER_TYPE)
 @ResourceDependencies({@ResourceDependency(library = "javax.faces", name = "jsf.js"),
         @ResourceDependency(name = "jquery.js", target = "head"),
         @ResourceDependency(name = "richfaces.js", target = "head"),
@@ -40,7 +39,7 @@ import javax.faces.component.UIComponent;
 public class HtmlFocusModifierRenderer extends RendererBase {
 // ------------------------------ FIELDS ------------------------------
 
-    public static final String RENDERER_TYPE = "org.richfaces.HtmlFocusModifierRenderer";
+    public static final String RENDERER_TYPE = "org.richfaces.sandbox.HtmlFocusModifierRenderer";
 
     protected Class<? extends UIComponent> getComponentClass() {
         return AbstractFocusModifier.class;

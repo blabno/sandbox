@@ -1,7 +1,7 @@
-package org.richfaces.component;
+package org.richfaces.sandbox.component;
 
 import org.richfaces.cdk.annotations.*;
-import org.richfaces.renderkit.html.HtmlFocusModifierRenderer;
+import org.richfaces.sandbox.renderkit.html.HtmlFocusModifierRenderer;
 
 import javax.faces.component.UIComponentBase;
 
@@ -10,9 +10,9 @@ import javax.faces.component.UIComponentBase;
 public abstract class AbstractFocusModifier extends UIComponentBase {
 // ------------------------------ FIELDS ------------------------------
 
-    public static final String COMPONENT_FAMILY = "org.richfaces.Focus";
+    public static final String COMPONENT_FAMILY = "org.richfaces.sandbox.Focus";
 
-    public static final String COMPONENT_TYPE = "org.richfaces.FocusModifier";
+    public static final String COMPONENT_TYPE = "org.richfaces.sandbox.FocusModifier";
 
 // -------------------------- OTHER METHODS --------------------------
 

@@ -1,4 +1,4 @@
-package org.richfaces.component;
+package org.richfaces.sandbox.component;
 
 import org.richfaces.cdk.annotations.Attribute;
 import org.richfaces.cdk.annotations.JsfComponent;
@@ -7,7 +7,7 @@ import org.richfaces.cdk.annotations.Tag;
 import org.richfaces.cdk.annotations.TagType;
 import org.richfaces.log.LogFactory;
 import org.richfaces.log.Logger;
-import org.richfaces.renderkit.html.HtmlFocusRenderer;
+import org.richfaces.sandbox.renderkit.html.HtmlFocusRenderer;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
@@ -25,9 +25,9 @@ import java.util.Set;
 public abstract class AbstractFocus extends UIComponentBase {
 // ------------------------------ FIELDS ------------------------------
 
-    public static final String COMPONENT_FAMILY = "org.richfaces.Focus";
+    public static final String COMPONENT_FAMILY = "org.richfaces.sandbox.Focus";
 
-    public static final String COMPONENT_TYPE = "org.richfaces.Focus";
+    public static final String COMPONENT_TYPE = "org.richfaces.sandbox.Focus";
 
     public static final int DEFAULT_PRIORITY = Integer.MAX_VALUE;
 

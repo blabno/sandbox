@@ -20,13 +20,12 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.richfaces.renderkit.html;
+package org.richfaces.sandbox.renderkit.html;
 
 import org.ajax4jsf.javascript.JSFunction;
 import org.ajax4jsf.javascript.JSFunctionDefinition;
 import org.richfaces.cdk.annotations.JsfRenderer;
-import org.richfaces.component.AbstractFocus;
-import org.richfaces.component.AbstractFocusModifier;
+import org.richfaces.sandbox.component.AbstractFocusModifier;
 import org.richfaces.renderkit.HtmlConstants;
 import org.richfaces.renderkit.RendererBase;
 
@@ -39,7 +38,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 
-@JsfRenderer(family = AbstractFocus.COMPONENT_FAMILY, type = HtmlFocusRenderer.RENDERER_TYPE)
+@JsfRenderer(family = org.richfaces.sandbox.component.AbstractFocus.COMPONENT_FAMILY, type = HtmlFocusRenderer.RENDERER_TYPE)
 @ResourceDependencies({@ResourceDependency(library = "javax.faces", name = "jsf.js"),
         @ResourceDependency(name = "jquery.js", target = "head"),
         @ResourceDependency(name = "richfaces.js", target = "head"),
@@ -48,9 +47,9 @@ import java.io.IOException;
 public class HtmlFocusRenderer extends RendererBase {
 // ------------------------------ FIELDS ------------------------------
 
-    public static final String RENDERER_TYPE = "org.richfaces.HtmlFocusRenderer";
+    public static final String RENDERER_TYPE = "org.richfaces.sandbox.HtmlFocusRenderer";
 
-    private void checkValidity(FacesContext context, AbstractFocus component) {
+    private void checkValidity(FacesContext context, org.richfaces.sandbox.component.AbstractFocus component) {
         String clientId = getUtils().clientId(context, component);
         String name = component.getName();
         String timing = component.getTiming();
@@ -73,10 +72,10 @@ public class HtmlFocusRenderer extends RendererBase {
     @Override
     protected void doEncodeEnd(ResponseWriter writer, FacesContext context, UIComponent component)
             throws IOException {
-        if (!(component instanceof AbstractFocus)) {
+        if (!(component instanceof org.richfaces.sandbox.component.AbstractFocus)) {
             return;
         }
-        AbstractFocus uiFocus = (AbstractFocus) component;
+        org.richfaces.sandbox.component.AbstractFocus uiFocus = (org.richfaces.sandbox.component.AbstractFocus) component;
         final String clientId = getUtils().clientId(context, component);
         checkValidity(context, uiFocus);
         Integer priority = uiFocus.getPriority();
@@ -92,7 +91,7 @@ public class HtmlFocusRenderer extends RendererBase {
                 throw new FacesException("No component with id=" + targetComponentId + " found!");
             }
             targetClientId = forcomp.getClientId(context);
-            AbstractFocusModifier modifier = AbstractFocus.findModifier(forcomp);
+            AbstractFocusModifier modifier = org.richfaces.sandbox.component.AbstractFocus.findModifier(forcomp);
             if (modifier != null) {
                 final String modifiedTargetClientId = modifier.getTargetClientId();
                 if (modifiedTargetClientId != null && !modifiedTargetClientId.equals("")) {
@@ -112,12 +111,12 @@ public class HtmlFocusRenderer extends RendererBase {
             return;
         }
         if (priority == null) {
-            priority = AbstractFocus.DEFAULT_PRIORITY;
+            priority = org.richfaces.sandbox.component.AbstractFocus.DEFAULT_PRIORITY;
         }
         writer.startElement(HtmlConstants.SCRIPT_ELEM, null);
         writer.writeAttribute(HtmlConstants.TYPE_ATTR, "text/javascript", "type");
         writer.writeAttribute(HtmlConstants.ID_ATTRIBUTE, clientId, HtmlConstants.ID_ATTRIBUTE);
-        if (AbstractFocus.TIMING_ON_LOAD.equals(uiFocus.getTiming())) {
+        if (org.richfaces.sandbox.component.AbstractFocus.TIMING_ON_LOAD.equals(uiFocus.getTiming())) {
             writer.write(new JSFunction("RichFaces.ui.Focus.setFocus", targetClientId, priority).toScript());
             writer.write(";");
         } else {
@@ -135,6 +134,6 @@ public class HtmlFocusRenderer extends RendererBase {
     }
 
     protected Class<? extends UIComponent> getComponentClass() {
-        return AbstractFocus.class;
+        return org.richfaces.sandbox.component.AbstractFocus.class;
     }
 }
