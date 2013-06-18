@@ -27,11 +27,12 @@
     <parent>
         <groupId>org.richfaces</groupId>
         <artifactId>richfaces-root-parent</artifactId>
-        <version>4.3.1-SNAPSHOT</version>
+        <version>4.3.1.Final</version>
     </parent>
 
     <groupId>org.richfaces.sandbox.ui.rating</groupId>
     <artifactId>rating-parent</artifactId>
+    <version>4.3.1.Final.ITC1</version>
     <packaging>pom</packaging>
     <name>Richfaces UI Components: rating parent</name>
 
